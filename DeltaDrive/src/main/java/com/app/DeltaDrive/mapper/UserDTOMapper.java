@@ -27,27 +27,20 @@ public class UserDTOMapper {
 
     public User mapUserDTOToUser(UserDTO userDTO) {
 
-        Date birthday= parseDate(userDTO.birthday());
-        Role role = parseRole(userDTO.role());
 
+        //Role role = parseRole(userDTO.role());
+        Role role= Role.PASSENGER;
         return new User(
                 userDTO.firstName(),
                 userDTO.lastName(),
                 userDTO.email(),
                 userDTO.password(),
-                birthday,
+                userDTO.birthday(),
                 role
         );
     }
 
-    private Date parseDate(String dateStr) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.mm.yyyy.");
-        try {
-            return dateFormat.parse(dateStr);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Invalid date format: " + dateStr, e);
-        }
-    }
+
 
     private Role parseRole(String roleStr) {
         try {
