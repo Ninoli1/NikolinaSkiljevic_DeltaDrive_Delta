@@ -1,6 +1,9 @@
 package com.app.DeltaDrive.configuration;
 
 import com.app.DeltaDrive.security.JwtAuthenticationFilter;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.models.OpenAPI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import java.net.Proxy;
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -25,6 +30,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 public class SecurityConfiguration {
     private static final String[] WHITE_LIST_URL = {"/api/auth/**",
+            "/api/vehicle/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -47,6 +53,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
+                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
@@ -71,5 +78,9 @@ public class SecurityConfiguration {
 
 
     }
+
+
+
+
 
 }
