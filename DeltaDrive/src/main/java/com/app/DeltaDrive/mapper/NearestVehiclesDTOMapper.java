@@ -9,6 +9,7 @@ public class NearestVehiclesDTOMapper {
 
     public NearestVehicleDTO mapToDTO(Vehicle vehicle,Double distance,Double totalPrice) {
         return new NearestVehicleDTO(
+                vehicle.getId(),
                vehicle.getBrand(),
                 distance,
                 totalPrice,
