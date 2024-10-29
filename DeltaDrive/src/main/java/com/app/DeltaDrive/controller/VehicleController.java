@@ -1,9 +1,13 @@
 package com.app.DeltaDrive.controller;
 
 import com.app.DeltaDrive.dto.NearestVehicleDTO;
+import com.app.DeltaDrive.model.Location;
 import com.app.DeltaDrive.service.VehicleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,13 +22,20 @@ public class VehicleController {
 
     @GetMapping("/nearest")
     public ResponseEntity<List<NearestVehicleDTO>> findNearestVehicles(
-            @RequestParam Double passLat,
-            @RequestParam Double passLong,
-            @RequestParam Double destinationLat,
-            @RequestParam Double destinationLong) {
+            @RequestParam double passengerLatitude,
+            @RequestParam double passengerLongitude,
+            @RequestParam double destinationLatitude,
+            @RequestParam double destinationLongitude) {
 
-        return ResponseEntity.ok(vehicleService.findNearestVehicles(passLat, passLong, destinationLat, destinationLong));
+        Location passengerLocation = new Location(passengerLatitude, passengerLongitude);
+        Location destinationLocation = new Location(destinationLatitude, destinationLongitude);
+
+        return ResponseEntity.ok(vehicleService.findNearestVehicles(passengerLocation,destinationLocation));
     }
+
+
+
+
 
 
 

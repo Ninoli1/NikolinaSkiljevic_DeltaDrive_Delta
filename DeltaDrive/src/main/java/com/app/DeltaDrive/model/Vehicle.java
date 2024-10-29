@@ -22,9 +22,8 @@ public class Vehicle {
 
     private String lastName;
 
-    private Double latitude;
-
-    private Double longitude;
+    @Embedded
+    private Location location;
 
     private String startPrice;
 
@@ -34,12 +33,11 @@ public class Vehicle {
     private Availability availability;
 
 
-    public Vehicle(String brand, String driverFirstName, String driverLastName, Double latitude, Double longitude, String startPrice, String pricePerKm, Availability available) {
+    public Vehicle(String brand, String driverFirstName, String driverLastName, Location location,  String startPrice, String pricePerKm, Availability available) {
         this.brand = brand;
         this.firstName = driverFirstName;
         this.lastName = driverLastName;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.location=location;
         this.startPrice = startPrice;
         this.pricePerKM = pricePerKm;
         this.availability = available;
