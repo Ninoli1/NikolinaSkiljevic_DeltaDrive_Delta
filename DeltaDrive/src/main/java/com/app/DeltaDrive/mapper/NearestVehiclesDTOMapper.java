@@ -7,11 +7,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class NearestVehiclesDTOMapper {
 
-    public NearestVehicleDTO mapToDTO(Vehicle vehicle,Double distance,Double totalPrice) {
+    public NearestVehicleDTO mapToDTO(Vehicle vehicle,Double distancePassengerVehicle,Double totalPrice,Double distancePassengerDestination) {
         return new NearestVehicleDTO(
                 vehicle.getId(),
                vehicle.getBrand(),
-                distance,
+                distancePassengerVehicle,
+                distancePassengerDestination,
                 totalPrice,
                 vehicle.getAvailability().toString()
         );

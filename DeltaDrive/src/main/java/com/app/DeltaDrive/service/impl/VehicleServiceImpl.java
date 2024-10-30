@@ -34,13 +34,15 @@ public class VehicleServiceImpl implements VehicleService {
 
         return nearestVehicles.stream()
                 .map(vehicle -> {
-                    double distanceFromPassenger = calculationService.calculateDistance(vehicle.getLocation(), passengerLocation);
-                    double distanceFromDestination= calculationService.calculateDistance(passengerLocation,destinationLocation);
-                    double totalPrice = calculationService.calculateTotalPrice(vehicle,distanceFromDestination);
+                    double distanceVehiclePassenger = calculationService.calculateDistance(vehicle.getLocation(), passengerLocation);
+                    double distancePassengerDestination= calculationService.calculateDistance(passengerLocation,destinationLocation);
+                    double totalDistance= distanceVehiclePassenger+distancePassengerDestination;
+                    double totalPrice = calculationService.calculateTotalPrice(vehicle,totalDistance);
                     return new NearestVehicleDTO(
                             vehicle.getId(),
                             vehicle.getBrand(),
-                            distanceFromPassenger,
+                            distanceVehiclePassenger,
+                            distancePassengerDestination,
                             totalPrice,
                             vehicle.getAvailability().toString()
                     );

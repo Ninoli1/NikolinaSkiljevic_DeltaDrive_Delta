@@ -58,8 +58,11 @@ public class BookingServiceImpl implements BookingService {
                               Location passengerLocation,
                               Location destinationLocation,
                               String passengerEmail){
-        double distance= calculationService.calculateDistance(passengerLocation,destinationLocation);
-        double totalPrice=calculationService.calculateTotalPrice(vehicle,distance);
+        double distancePassengerDestination= calculationService.calculateDistance(passengerLocation,destinationLocation);
+        double distanceVehiclePassenger= calculationService.calculateDistance(vehicle.getLocation(),passengerLocation);
+        double totalDistance= distanceVehiclePassenger+distancePassengerDestination;
+        double totalPrice=calculationService.calculateTotalPrice(vehicle,totalDistance);
+
         Ride ride = new Ride();
         ride.setPassengerEmail(passengerEmail);
         ride.setStartLocation(passengerLocation);

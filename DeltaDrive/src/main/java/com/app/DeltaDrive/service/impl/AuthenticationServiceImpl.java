@@ -7,6 +7,7 @@ import com.app.DeltaDrive.model.User;
 import com.app.DeltaDrive.repository.UserRepository;
 import com.app.DeltaDrive.service.AuthenticationService;
 import com.app.DeltaDrive.service.JwtService;
+import com.app.DeltaDrive.service.UserService;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,11 +15,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final UserDTOMapper userDTOMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -27,7 +30,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userDTOMapper.mapUserDTOToUser(userDTO);
         user.setPassword(passwordEncoder.encode(userDTO.password()));
 
-        User savedUser = userRepository.save(user);
+        User savedUser = userService.save(user);
         var jwt= jwtService.generateToken(savedUser);
         return jwt;
     }
@@ -39,8 +42,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         loginDTO.password()
                 )
         );
-        var foundUser= userRepository.findByEmail(loginDTO.email())
-                .orElseThrow();
+        var foundUser= userService.findByEmail(loginDTO.email())
+                .orElseThrow(() -> new NoSuchElementException("User with email " + loginDTO.email() + " not found"));;
         var jwt= jwtService.generateToken(foundUser);
         return jwt;
 

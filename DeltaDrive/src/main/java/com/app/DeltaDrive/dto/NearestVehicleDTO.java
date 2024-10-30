@@ -10,6 +10,8 @@ public record NearestVehicleDTO(
 
          Double distanceFromPassenger,
 
+         Double distancePassengerDestination,
+
          Double totalPrice,
 
         String availability) {
