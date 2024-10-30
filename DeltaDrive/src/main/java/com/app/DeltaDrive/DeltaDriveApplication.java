@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @ComponentScan
 @EnableJpaRepositories(basePackages = "com.app.DeltaDrive.repository")
-@OpenAPIDefinition(security = { @SecurityRequirement(name = "jwt"), @SecurityRequirement(name = "basic") })
+@SecurityRequirement(name="bearerAuth")
 public class DeltaDriveApplication {
 
 	public static void main(String[] args) {

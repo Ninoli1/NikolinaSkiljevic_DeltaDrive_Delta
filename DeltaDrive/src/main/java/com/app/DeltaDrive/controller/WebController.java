@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class WebController {
 
-    @GetMapping("/")
+    @GetMapping("/map")
     public String index() {
         return "forward:index.html";
     }
