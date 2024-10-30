@@ -13,14 +13,15 @@ import java.util.List;
 public interface VehicleRepository extends JpaRepository<Vehicle,Integer> {
 
     @Query(value = """
-            SELECT v FROM Vehicle v
-            WHERE v.availability = 'AVAILABLE'
-            ORDER BY ST_Distance(
-                    ST_SetSRID(ST_MakePoint(v.location.longitude, v.location.latitude), 4326),
-                    ST_SetSRID(ST_MakePoint(:#{#location.longitude}, :#{#location.latitude}), 4326)
-            )
-            LIMIT 10
-            """)
+        SELECT v FROM Vehicle v
+        WHERE v.availability = 'AVAILABLE'
+        ORDER BY ST_Distance(
+            ST_Transform(ST_SetSRID(ST_MakePoint(v.location.longitude, v.location.latitude), 4326), 3857),
+            ST_Transform(ST_SetSRID(ST_MakePoint(:#{#location.longitude}, :#{#location.latitude}), 4326), 3857)
+        )
+        LIMIT 10
+        """)
+
     List<Vehicle> findTenNearest(@Param("location") Location location);
 }
 
