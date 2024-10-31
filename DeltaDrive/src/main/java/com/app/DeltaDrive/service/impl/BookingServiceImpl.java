@@ -7,6 +7,10 @@ import com.app.DeltaDrive.model.Vehicle;
 import com.app.DeltaDrive.model.enums.Availability;
 import com.app.DeltaDrive.model.enums.RideStatus;
 import com.app.DeltaDrive.service.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,19 +23,26 @@ import java.util.Random;
 public class BookingServiceImpl implements BookingService {
 
     private final VehicleService vehicleService;
-
     private final RideService rideService;
-
-    private final CalculationService calculationService;
-
     private final AuthenticationService authService;
 
+    @PersistenceContext
+    private EntityManager entityManager;
 
-
+    /*
+    Transaction with pessimistic lock is used in case multiple passengers
+    try to book the same vehicle at the same time. This means that while driver
+    is deciding whether he's gonna accept the request of one's passenger, others'
+    requests are on lower level, waiting for the driver to decide.
+     */
+    @Transactional
     public String bookAVehicle(BookingRequestDTO request){
+        Vehicle selectedVehicle=entityManager.find(Vehicle.class,request.vehicleId(), LockModeType.PESSIMISTIC_WRITE);
 
 
-        Vehicle selectedVehicle=vehicleService.findById(request.vehicleId());
+        if (selectedVehicle.getAvailability() != Availability.AVAILABLE) {
+            return "Vehicle already booked";
+        }
 
         Random random = new Random();
         boolean driverAccepted = random.nextInt(100) > 25;
@@ -43,32 +54,13 @@ public class BookingServiceImpl implements BookingService {
         selectedVehicle.setAvailability(Availability.BOOKED);
         vehicleService.save(selectedVehicle);
 
-        Ride createdRide=generateRide(selectedVehicle,request.passengerLocation(), request.destinationLocation());
+        Ride createdRide=rideService.generateRide(selectedVehicle,
+                                                  request.passengerLocation(),
+                                                  request.destinationLocation(),
+                                                  authService.findLoggedInEmail());
 
         String accepted= new String("Driver accepted! Visit http://localhost:8080/index.html?id="+createdRide.getId());
 
         return accepted;
     }
-
-    private Ride generateRide(Vehicle vehicle,
-                              Location passengerLocation,
-                              Location destinationLocation){
-        double totalDistance= calculationService.calculateTotalDistance(vehicle,passengerLocation,destinationLocation);
-        double totalPrice=calculationService.calculateTotalPrice(vehicle,passengerLocation,destinationLocation);
-
-        Ride ride = new Ride();
-        ride.setPassengerEmail(authService.findLoggedInEmail());
-        ride.setPassengerLocation(passengerLocation);
-        ride.setDestinationLocation(destinationLocation);
-        ride.setTotalPrice(totalPrice);
-        ride.setTotalDistance(totalDistance);
-        ride.setVehicleId(vehicle.getId());
-        ride.setVehicleId(vehicle.getId());
-        ride.setStatus(RideStatus.STARTED);
-
-       return rideService.save(ride);
-    }
-
-
-
 }
