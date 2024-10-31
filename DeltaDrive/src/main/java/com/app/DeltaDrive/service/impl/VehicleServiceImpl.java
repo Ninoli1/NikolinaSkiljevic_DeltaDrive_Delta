@@ -4,6 +4,7 @@ import com.app.DeltaDrive.dto.NearestVehicleDTO;
 import com.app.DeltaDrive.mapper.NearestVehiclesDTOMapper;
 import com.app.DeltaDrive.model.Location;
 import com.app.DeltaDrive.model.Vehicle;
+import com.app.DeltaDrive.model.enums.Availability;
 import com.app.DeltaDrive.repository.VehicleRepository;
 import com.app.DeltaDrive.service.CalculationService;
 import com.app.DeltaDrive.service.VehicleService;
@@ -36,8 +37,8 @@ public class VehicleServiceImpl implements VehicleService {
                 .map(vehicle -> {
                     double distanceVehiclePassenger = calculationService.calculateDistance(vehicle.getLocation(), passengerLocation);
                     double distancePassengerDestination= calculationService.calculateDistance(passengerLocation,destinationLocation);
-                    double totalDistance= distanceVehiclePassenger+distancePassengerDestination;
-                    double totalPrice = calculationService.calculateTotalPrice(vehicle,totalDistance);
+                    double totalPrice = calculationService.calculateTotalPrice(vehicle,passengerLocation,destinationLocation);
+
                     return new NearestVehicleDTO(
                             vehicle.getId(),
                             vehicle.getBrand(),
@@ -62,5 +63,22 @@ public class VehicleServiceImpl implements VehicleService {
         }
     }
 
+    public Vehicle makeAvailable(Integer vehicleId){
+        Vehicle oldVehicle= findById(vehicleId);
+        oldVehicle.setAvailability(Availability.AVAILABLE);
+        return save(oldVehicle);
+    }
+
+    @Override
+    public Location findVehicleLocation(Integer vehicleId) {
+        Vehicle vehicle= findById(vehicleId);
+        return vehicle.getLocation();
+    }
+
+    @Override
+    public String findDriver(Integer vehicleId) {
+        Vehicle vehicle= findById(vehicleId);
+        return vehicle.getFirstName()+vehicle.getLastName();
+    }
 
 }

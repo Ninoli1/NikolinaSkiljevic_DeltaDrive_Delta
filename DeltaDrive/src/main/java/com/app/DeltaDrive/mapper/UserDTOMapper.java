@@ -42,11 +42,4 @@ public class UserDTOMapper {
 
 
 
-    private Role parseRole(String roleStr) {
-        try {
-            return Role.valueOf(roleStr.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid role: " + roleStr, e);
-        }
-    }
 }

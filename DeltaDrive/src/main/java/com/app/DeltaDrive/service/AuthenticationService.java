@@ -7,4 +7,6 @@ public interface AuthenticationService {
 
     public String register(UserDTO userDTO);
     public  String login(LoginDTO userDTO);
+
+    public String findLoggedInEmail();
 }

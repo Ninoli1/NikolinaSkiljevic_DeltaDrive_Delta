@@ -31,11 +31,22 @@ public class CalculationServiceImpl implements CalculationService {
     }
 
 
-    public double calculateTotalPrice(Vehicle vehicle, Double totalDistance) {
+
+    public double calculateTotalPrice(Vehicle vehicle,Location passLocation,Location destLocation) {
+
+
+        double totalDistance= calculateTotalDistance(vehicle,passLocation,destLocation);
+
         double startPrice = extractPrice(vehicle.getStartPrice());
         double pricePerKM = extractPrice(vehicle.getPricePerKM());
 
         return startPrice + ((totalDistance / 1000) * pricePerKM);
+    }
+
+    public  double calculateTotalDistance(Vehicle vehicle,Location passLocation,Location destLocation){
+        double distancePassengerDestination= calculateDistance(passLocation,destLocation);
+        double distanceVehiclePassenger= calculateDistance(vehicle.getLocation(),passLocation);
+        return distanceVehiclePassenger+distancePassengerDestination;
     }
 
     public double extractPrice(String priceString) {

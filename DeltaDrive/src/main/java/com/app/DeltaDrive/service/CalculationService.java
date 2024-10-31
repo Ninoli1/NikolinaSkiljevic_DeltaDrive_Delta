@@ -7,7 +7,9 @@ public interface CalculationService {
 
     public double calculateDistance(Location startLocation, Location endLocation) ;
 
-    public double calculateTotalPrice(Vehicle vehicle, Double distanceFromDestination);
+    public double calculateTotalPrice(Vehicle vehicle,Location passLocation,Location destLocation);
 
     public double extractPrice(String priceString) ;
+
+    public  double calculateTotalDistance(Vehicle vehicle,Location passLocation,Location destLocation);
 }

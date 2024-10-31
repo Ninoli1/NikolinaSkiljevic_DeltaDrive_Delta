@@ -20,23 +20,27 @@ public class Ride {
     private String passengerEmail;
 
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "latitude", column = @Column(name = "start_latitude")),
-            @AttributeOverride(name = "longitude", column = @Column(name = "start_longitude"))
-    })
-    private Location startLocation;
+
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "latitude", column = @Column(name = "end_latitude")),
-            @AttributeOverride(name = "longitude", column = @Column(name = "end_longitude"))
+            @AttributeOverride(name = "latitude", column = @Column(name = "dest_latitude")),
+            @AttributeOverride(name = "longitude", column = @Column(name = "dest_longitude"))
     })
-    private Location endLocation;
+    private Location destinationLocation;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "latitude", column = @Column(name = "pass_latitude")),
+            @AttributeOverride(name = "longitude", column = @Column(name = "pass_longitude"))
+    })
+    private Location passengerLocation;
 
     private Double totalPrice;
 
-    private String driver;
+    private Double totalDistance;
+
+    private Integer vehicleId;
 
     @Enumerated(EnumType.STRING)
     private RideStatus status;
