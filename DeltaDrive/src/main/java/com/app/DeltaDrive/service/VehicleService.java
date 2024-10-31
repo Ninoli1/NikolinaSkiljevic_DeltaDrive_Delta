@@ -13,4 +13,10 @@ public interface VehicleService {
     public Vehicle findById(Integer id);
 
     public Vehicle save(Vehicle vehicle);
+
+    public Vehicle makeAvailable(Integer vehicleId);
+
+    public Location findVehicleLocation(Integer vehicleId);
+
+    public String findDriver(Integer vehicleId);
 }

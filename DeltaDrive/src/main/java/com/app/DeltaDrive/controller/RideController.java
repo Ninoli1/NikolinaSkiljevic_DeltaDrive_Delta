@@ -1,14 +1,12 @@
 package com.app.DeltaDrive.controller;
 
 
+import com.app.DeltaDrive.dto.RideDTO;
 import com.app.DeltaDrive.model.Ride;
 import com.app.DeltaDrive.service.RideService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/rides")
@@ -18,14 +16,16 @@ public class RideController {
     private final RideService rideService;
 
     @GetMapping("/{rideId}")
-    public ResponseEntity<Ride> getRide(@PathVariable Integer rideId) {
-        Ride ride = rideService.findRideById(rideId);
-        return ResponseEntity.ok(ride);
+    public ResponseEntity<RideDTO> getRide(@PathVariable Integer rideId) {
+        return ResponseEntity.ok(rideService.findRideDTOById((rideId)));
     }
 
-    @GetMapping("/map")
-    public String index() {
-        return "index";
+    @PutMapping("/finish/{id}/{vehicleId}")
+    public ResponseEntity<Ride> finishRide(
+             @PathVariable("id") Integer rideId, @PathVariable("vehicleId") Integer vehicleId) {
+        return ResponseEntity.ok(rideService.finishRide(rideId,vehicleId));
     }
+
+
 
 }
