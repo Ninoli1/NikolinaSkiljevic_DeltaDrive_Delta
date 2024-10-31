@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/rides")
 @RequiredArgsConstructor
@@ -16,7 +18,7 @@ public class RideController {
     private final RideService rideService;
 
     @GetMapping("/{rideId}")
-    public ResponseEntity<RideDTO> getRide(@PathVariable Integer rideId) {
+    public ResponseEntity<RideDTO> findRideById(@PathVariable Integer rideId) {
         return ResponseEntity.ok(rideService.findRideDTOById((rideId)));
     }
 
@@ -24,6 +26,11 @@ public class RideController {
     public ResponseEntity<Ride> finishRide(
              @PathVariable("id") Integer rideId, @PathVariable("vehicleId") Integer vehicleId) {
         return ResponseEntity.ok(rideService.finishRide(rideId,vehicleId));
+    }
+
+    @GetMapping("/myRides")
+    public ResponseEntity<List<RideDTO>> findMyRides() {
+        return ResponseEntity.ok(rideService.findRidesByPassenger());
     }
 
 

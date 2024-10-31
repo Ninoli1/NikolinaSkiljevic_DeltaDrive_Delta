@@ -5,6 +5,8 @@ import com.app.DeltaDrive.model.Location;
 import com.app.DeltaDrive.model.Ride;
 import com.app.DeltaDrive.model.Vehicle;
 
+import java.util.List;
+
 public interface RideService {
 
      Ride save(Ride ride);
@@ -18,4 +20,6 @@ public interface RideService {
                               Location passengerLocation,
                               Location destinationLocation,
                               String loggedInEmail);
+
+     public List<RideDTO> findRidesByPassenger();
 }

@@ -8,27 +8,14 @@ import jakarta.persistence.*;
 
 public record RideDTO (
         Integer id,
-
         String passengerEmail,
-
-
-
         Location vehicleLocation,
-
-
         Location destinationLocation,
-
-
         Location passengerLocation,
-
         Double totalPrice,
-
         Double totalDistance,
-
         String driver,
-
         Integer vehicleId,
-
         String status
 
 ) {

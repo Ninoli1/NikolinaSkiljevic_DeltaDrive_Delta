@@ -7,12 +7,16 @@ import com.app.DeltaDrive.model.Ride;
 import com.app.DeltaDrive.model.Vehicle;
 import com.app.DeltaDrive.model.enums.RideStatus;
 import com.app.DeltaDrive.repository.RideRepository;
+import com.app.DeltaDrive.service.AuthenticationService;
 import com.app.DeltaDrive.service.CalculationService;
 import com.app.DeltaDrive.service.RideService;
 import com.app.DeltaDrive.service.VehicleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ public class RideServiceImpl implements RideService {
     private final VehicleService vehicleService;
     private final RideDTOMapper rideDTOMapper;
     private final CalculationService calculationService;
+    private final AuthenticationService authService;
     @Override
     public Ride save(Ride ride) {
         try{
@@ -69,5 +74,13 @@ public class RideServiceImpl implements RideService {
         ride.setStatus(RideStatus.STARTED);
 
         return save(ride);
+    }
+
+    public List<RideDTO> findRidesByPassenger(){
+        List<Ride> rides = rideRepository.findByPassengerEmail(authService.findLoggedInEmail());
+
+        return rides.stream()
+                .map(rideDTOMapper::mapRideToRideDTO)
+                .collect(Collectors.toList());
     }
 }
