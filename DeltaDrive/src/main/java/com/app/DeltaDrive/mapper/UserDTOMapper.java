@@ -19,8 +19,7 @@ public class UserDTOMapper {
                 user.getLastName(),
                 user.getEmail(),
                 user.getPassword(),
-                user.getBirthday().toString(),
-                user.getRole().name()
+                user.getBirthday().toString()
 
         );
     }

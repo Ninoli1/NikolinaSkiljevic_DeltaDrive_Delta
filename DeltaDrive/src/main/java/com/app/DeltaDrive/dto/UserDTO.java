@@ -27,9 +27,8 @@ public record UserDTO(
 
         @Pattern(regexp = "^\\d{2}\\.\\d{2}\\.\\d{4}\\.$", message = "Please enter the date in the format dd.MM.yyyy.")
         @NotBlank(message = "Birthday should not be blank!")
-        String birthday,
+        String birthday
 
-        @NotBlank(message = "Role should not be blank!")
-        String role
+
      ) {
 }
