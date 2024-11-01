@@ -3,7 +3,9 @@
 ## Table of Contents
 - [Features](#features)
 - [Technologies Used](#technologies-used)
+- [Inserting Test Data](#inserting-test-data)
 - [API Documentation](#api-documentation-with-swagger)
+  
 
 ## Features
 - **Authentication & Authorization**: Secured API endpoints with Spring Security and JWT tokens.
@@ -16,6 +18,14 @@
 - **Database**: PostgreSQL 
 - **Map Rendering**: Leaflet.js, OpenStreetMap tiles
 - **Build Tool**: Maven
+
+## Inserting Test Data 
+
+Since the dataset was too large to be pushed on Git, its insert into database follows these steps:
+
+Open your psql terminal and after entering credentials for your PostgreSQL database, enter the  command:
+-  \copy public.vehicle (brand, first_name,last_name, latitude, longitude, price_perkm, start_price) FROM 'pathToYourFile/Vega_IT_drive.csv' DELIMITER ',' CSV HEADER;
+
 
 ## API Documentation with Swagger
 This project includes API documentation generated using [Swagger](https://swagger.io/docs/), a powerful tool for designing, building, documenting, and consuming RESTful APIs.
