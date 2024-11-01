@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 @Table
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class Rate {
 
     @Id
