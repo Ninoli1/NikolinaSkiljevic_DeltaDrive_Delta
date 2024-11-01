@@ -24,7 +24,7 @@
 Since the dataset was too large to be pushed on Git, its insert into database follows these steps:
 
 Open your psql terminal and after entering credentials for your PostgreSQL database, enter the  command:
--  \copy public.vehicle (brand, first_name,last_name, latitude, longitude, price_perkm, start_price) FROM 'pathToYourFile/Vega_IT_drive.csv' DELIMITER ',' CSV HEADER;
+-  \copy public.vehicle (brand, driver_first_name,driver_last_name, latitude, longitude, price_perkm, start_price) FROM 'pathToYourFile/Vega_IT_drive.csv' DELIMITER ',' CSV HEADER;
 
 
 ## API Documentation with Swagger
