@@ -9,9 +9,6 @@ import com.app.DeltaDrive.repository.VehicleRepository;
 import com.app.DeltaDrive.service.CalculationService;
 import com.app.DeltaDrive.service.VehicleService;
 import lombok.RequiredArgsConstructor;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -78,7 +75,7 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public String findDriver(Integer vehicleId) {
         Vehicle vehicle= findById(vehicleId);
-        return vehicle.getFirstName()+vehicle.getLastName();
+        return vehicle.getDriverFirstName()+vehicle.getDriverLastName();
     }
 
 }
