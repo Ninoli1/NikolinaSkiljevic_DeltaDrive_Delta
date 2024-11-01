@@ -18,7 +18,7 @@
 - **Build Tool**: Maven
 
 ## API Documentation with Swagger
-This project includes API documentation generated using Swagger, a powerful tool for designing, building, documenting, and consuming RESTful APIs.
+This project includes API documentation generated using [Swagger](https://swagger.io/docs/), a powerful tool for designing, building, documenting, and consuming RESTful APIs.
 
 ### Accessing Swagger UI
 After starting the application, you can view the API documentation and interact with the available endpoints via Swagger UI. To access Swagger UI, open your browser and navigate to:
