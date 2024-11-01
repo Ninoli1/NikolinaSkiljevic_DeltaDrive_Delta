@@ -1,5 +1,7 @@
 package com.app.DeltaDrive.service.impl;
 
+import com.app.DeltaDrive.dto.RateDTO;
+import com.app.DeltaDrive.mapper.RateDTOMapper;
 import com.app.DeltaDrive.model.Rate;
 import com.app.DeltaDrive.repository.RateRepository;
 import com.app.DeltaDrive.service.AuthenticationService;
@@ -16,10 +18,14 @@ public class RateServiceImpl implements RateService {
 
     private final RateRepository rateRepository;
     private final AuthenticationService authService;
+    private final RateDTOMapper rateDTOMapper;
+    private final AuthenticationService authenticationService;
     @Override
-    public Rate create(Rate rate) {
+    public Rate create(RateDTO rateDTO) {
         try{
-          return  rateRepository.save(rate);
+            Rate newRate= rateDTOMapper.mapRateDTOToRate(rateDTO);
+            newRate.setPassengerEmail(authenticationService.findLoggedInEmail());
+          return  rateRepository.save(newRate);
         }catch (IllegalArgumentException | DataIntegrityViolationException e){
             throw new RuntimeException("Couldn't create a rate"+e.getMessage(),e);
         }
