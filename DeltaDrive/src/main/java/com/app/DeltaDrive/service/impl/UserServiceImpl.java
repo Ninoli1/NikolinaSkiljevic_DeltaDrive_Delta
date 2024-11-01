@@ -26,4 +26,8 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Error while saving user " + e.getMessage(), e);
         }
     }
+
+    public boolean existsByEmail(String email){
+        return userRepository.existsByEmail(email);
+    }
 }

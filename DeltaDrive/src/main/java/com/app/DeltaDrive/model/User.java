@@ -38,7 +38,6 @@ public class User implements UserDetails {
 
     @NotBlank(message = "Email should not be blank!")
     @Email
-    @Column(unique = true)
     private String email;
     private String password;
 

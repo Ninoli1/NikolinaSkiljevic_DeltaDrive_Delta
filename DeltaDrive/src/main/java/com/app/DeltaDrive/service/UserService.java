@@ -11,4 +11,6 @@ public interface UserService {
 
    public Optional<User> findByEmail(String email);
    public  User save(User user);
+
+   boolean existsByEmail(String email);
 }

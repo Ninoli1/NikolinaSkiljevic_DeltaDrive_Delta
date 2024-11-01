@@ -10,6 +10,7 @@ import com.app.DeltaDrive.service.JwtService;
 import com.app.DeltaDrive.service.UserService;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,12 +30,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     public String register(UserDTO userDTO){
-        User user = userDTOMapper.mapUserDTOToUser(userDTO);
-        user.setPassword(passwordEncoder.encode(userDTO.password()));
+            if (userService.findByEmail(userDTO.email()).isPresent()) {
+                throw new IllegalArgumentException("Email already exists");
+            }
 
-        User savedUser = userService.save(user);
-        var jwt= jwtService.generateToken(savedUser);
-        return jwt;
+            User user = userDTOMapper.mapUserDTOToUser(userDTO);
+            user.setPassword(passwordEncoder.encode(userDTO.password()));
+
+            User savedUser = userService.save(user);
+            var jwt = jwtService.generateToken(savedUser);
+            return jwt;
     }
 
     public String login(LoginDTO loginDTO){
