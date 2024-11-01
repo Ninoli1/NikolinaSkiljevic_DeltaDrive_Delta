@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Tracking</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<h1>Vehicle Tracking</h1>
+<div id="map"></div>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+    function getUrlParameter(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    const rideId = getUrlParameter('id');
+
+    $(document).ready(function() {
+        $.get(`api/rides/${rideId}`, function(ride) {
+            const startLocation = ride.vehicleLocation;
+            const endLocation = ride.destinationLocation;
+            const passengerLocation = ride.passengerLocation;
+            const vehicleId = ride.vehicleId;
+
+            const map = L.map('map').setView([startLocation.latitude, startLocation.longitude], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+            }).addTo(map);
+
+            L.marker([startLocation.latitude, startLocation.longitude]).addTo(map)
+                .bindPopup('Start Location')
+                .openPopup();
+
+            L.marker([endLocation.latitude, endLocation.longitude]).addTo(map)
+                .bindPopup('Destination Location')
+                .openPopup();
+
+            L.marker([passengerLocation.latitude, passengerLocation.longitude]).addTo(map)
+                .bindPopup('Passenger Location')
+                .openPopup();
+
+            const carIcon = L.icon({
+                iconUrl: 'car.png',
+                iconSize: [52, 52],
+                iconAnchor: [16, 32],
+                popupAnchor: [0, -28]
+            });
+
+            let vehicleMarker = L.marker([startLocation.latitude, startLocation.longitude], { icon: carIcon }).addTo(map)
+                .openPopup();
+
+            const distanceToPassenger = calculateDistance(startLocation, passengerLocation);
+            const distanceToDestination = calculateDistance(passengerLocation, endLocation);
+
+            moveVehicle(vehicleMarker, startLocation, passengerLocation, distanceToPassenger, function() {
+                moveVehicle(vehicleMarker, passengerLocation, endLocation, distanceToDestination, function() {
+                    completeRide(rideId, vehicleId);
+                });
+            });
+        });
+    });
+
+    function calculateDistance(start, end) {
+        const R = 6371;
+        const dLat = (end.latitude - start.latitude) * Math.PI / 180;
+        const dLon = (end.longitude - start.longitude) * Math.PI / 180;
+        const a =
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(start.latitude * Math.PI / 180) * Math.cos(end.latitude * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        const distance = R * c; // Distance in km
+        return distance;
+    }
+    function moveVehicle(marker, start, end, totalDistance, callback) {
+    const speed = 60;
+    const speedInMetersPerSecond = (speed * 1000) / 3600;
+    const updateInterval = 5000;
+    const distancePerUpdate = speedInMetersPerSecond * (updateInterval / 1000);
+
+    const steps = Math.ceil(totalDistance * 1000 / distancePerUpdate);
+    let step = 0;
+
+    const latDiff = (end.latitude - start.latitude) / steps;
+    const lngDiff = (end.longitude - start.longitude) / steps;
+
+    const interval = setInterval(() => {
+        if (step >= steps) {
+            marker.setLatLng([end.latitude, end.longitude]);
+            clearInterval(interval);
+            if (callback) callback();
+            return;
+        }
+
+        const newLat = start.latitude + (latDiff * step);
+        const newLng = start.longitude + (lngDiff * step);
+
+        marker.setLatLng([newLat, newLng]);
+        step++;
+    }, updateInterval);
+}
+
+    function completeRide(rideId, vehicleId) {
+        fetch(`api/rides/finish/${rideId}/${vehicleId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Ride Completed');
+            } else {
+                alert("Couldn't complete ride");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error completing ride');
+        });
+    }
+</script>
+</body>
+</html>
